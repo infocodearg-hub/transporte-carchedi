@@ -1,0 +1,56 @@
+---
+// Íconos de línea en SVG inline: sin librería y sin pedido de red.
+interface Props {
+  nombre: string;
+  class?: string;
+}
+
+const { nombre, class: clase = 'h-6 w-6' } = Astro.props;
+
+const trazos: Record<string, string> = {
+  reloj: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  camion:
+    '<path d="M3 17V7a1 1 0 0 1 1-1h9v11M13 10h4l3 3v4h-3"/><circle cx="7.5" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/>',
+  documento:
+    '<path d="M14 3H7a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V7z"/><path d="M14 3v4h4M9 12h6M9 16h4"/>',
+  grafico: '<path d="M4 19V5M4 19h16"/><path d="M8 16v-4M12 16V8M16 16v-6M20 16v-9"/>',
+  engranaje:
+    '<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/>',
+  equipo:
+    '<circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><path d="M16 6.2a3 3 0 0 1 0 5.6M17 20a6 6 0 0 0-2-4.5"/>',
+  // Camión con brazo de hidrogrúa plegado sobre la caja.
+  grua: '<path d="M2 17V9h9v8"/><path d="M11 12h4l3.5 3.5V17"/><circle cx="6" cy="19" r="2"/><circle cx="16.5" cy="19" r="2"/><path d="M2 17h2M8 19h6.5M18.5 17H22v-1.5"/><path d="M6 9V6.5h2.5"/><path d="M8.5 6.5 20 3"/><path d="M20 3v3.5"/>',
+  telefono:
+    '<path d="M5 3h3l2 5-2.5 1.5a12 12 0 0 0 6 6L15 13l5 2v3a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2z"/>',
+  mail: '<rect x="3" y="5" width="18" height="14" rx="1.5"/><path d="m3.5 6.5 8.5 6 8.5-6"/>',
+  pin: '<path d="M12 21s7-6 7-11a7 7 0 1 0-14 0c0 5 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/>',
+  whatsapp:
+    '<path d="M12 3a9 9 0 0 0-7.7 13.6L3 21l4.5-1.2A9 9 0 1 0 12 3z"/><path d="M8.8 8.6c.2-.5.5-.5.8-.5h.6c.2 0 .4 0 .6.5l.7 1.6c.1.3 0 .5-.1.7l-.4.5c-.1.2-.2.4 0 .7a7 7 0 0 0 2.9 2.4c.3.1.5.1.7-.1l.5-.6c.2-.2.4-.2.6-.1l1.6.8c.3.1.4.3.4.5 0 .8-.6 1.6-1.4 1.7-.6.1-1.4.2-4-1.1a9.4 9.4 0 0 1-3.6-3.7c-.7-1.3-.6-2.4-.4-3.3z"/>',
+  pallet:
+    '<path d="M3 16h18M5 16v3M19 16v3M8 16V9h8v7"/><path d="M8 12.5h8"/>',
+  peso: '<path d="M7 8h10l2 12H5z"/><circle cx="12" cy="5.5" r="2.5"/>',
+  regla: '<rect x="2.5" y="8" width="19" height="8" rx="1"/><path d="M7 8v4M11 8v3M15 8v4M19 8v3"/>',
+  pala: '<path d="M3 18h18"/><path d="M6 18V9h12v9"/><path d="m9 13 3-3 3 3"/>',
+  zorra: '<path d="M4 4v13h11"/><circle cx="7" cy="19.5" r="1.8"/><circle cx="15" cy="19.5" r="1.8"/><path d="M8 7h7v6H8z"/>',
+  frio: '<path d="M12 3v18M4.5 7.5l15 9M19.5 7.5l-15 9"/><path d="m9.5 4.8 2.5 2 2.5-2M9.5 19.2l2.5-2 2.5 2"/>',
+  escudo: '<path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6z"/><path d="m9 12 2 2 4-4"/>',
+  flecha: '<path d="M12 5v14M6 13l6 6 6-6"/>',
+  check: '<path d="m5 12.5 4.5 4.5L19 7"/>',
+  menu: '<path d="M4 7h16M4 12h16M4 17h16"/>',
+  cerrar: '<path d="m6 6 12 12M18 6 6 18"/>',
+};
+
+const d = trazos[nombre] ?? '';
+---
+
+<svg
+  class={clase}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.6"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  set:html={d}
+/>

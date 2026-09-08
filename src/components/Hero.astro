@@ -1,0 +1,77 @@
+---
+import { getImage } from 'astro:assets';
+import heroDesktop from '../assets/fotos/hero-desktop.jpg';
+import heroMobile from '../assets/fotos/hero-mobile.jpg';
+import { waPrincipal } from '../data/site';
+import IconoRed from './IconoRed.astro';
+import Icono from './Icono.astro';
+
+const alt =
+  'Camión con semirremolque de Transporte Carchedi con lona roja, estacionado frente a un depósito';
+
+/*
+  Dos recortes distintos porque el original es 4:3 y no funciona igual apaisado que en el celular.
+  Van dentro de un <picture> y no como dos <img> con `hidden`: así el navegador descarga solo el
+  que corresponde. Con dos <img> se bajaban los dos, que es peso de más justo en el LCP.
+*/
+const movil = await getImage({ src: heroMobile, widths: [480, 720, 960], format: 'webp' });
+const escritorio = await getImage({
+  src: heroDesktop,
+  widths: [800, 1200, 1600],
+  format: 'webp',
+});
+---
+
+<section id="inicio" class="relative isolate flex min-h-[88vh] items-end overflow-hidden bg-carbon">
+  <picture>
+    <source media="(min-width: 640px)" srcset={escritorio.srcSet.attribute} sizes="100vw" type="image/webp" />
+    <source srcset={movil.srcSet.attribute} sizes="100vw" type="image/webp" />
+    <img
+      src={movil.src}
+      alt={alt}
+      width={heroMobile.width}
+      height={heroMobile.height}
+      class="absolute inset-0 -z-10 h-full w-full object-cover object-center"
+      loading="eager"
+      fetchpriority="high"
+      decoding="sync"
+    />
+  </picture>
+
+  <!-- Overlay parejo: en el sitio viejo el texto se pierde sobre la foto. -->
+  <div
+    class="absolute inset-0 -z-10 bg-gradient-to-t from-carbon/95 via-carbon/65 to-carbon/35"
+    aria-hidden="true"
+  >
+  </div>
+
+  <div class="contenedor pb-16 pt-32 sm:pb-24 sm:pt-40">
+    <div class="max-w-3xl">
+      <p class="mb-4 font-cond text-lg font-semibold uppercase tracking-[0.2em] text-rojo sm:text-xl">
+        Transportando desde 2015
+      </p>
+
+      <h1 class="text-5xl leading-[0.95] text-white sm:text-6xl lg:text-7xl">
+        {/* El espacio va explícito: sin el <br> en móvil, el salto de línea del markup colapsa. */}
+        Cargas generales, peligrosas,<br class="hidden sm:block" />{' '}
+        <span class="text-rojo">con SENASA</span> y refrigeradas
+      </h1>
+
+      <p class="mt-6 max-w-2xl text-lg text-gris-200 sm:text-xl">
+        Empresa familiar de transporte de cargas en Capital Federal y Gran Buenos Aires. Flota
+        propia con pala hidráulica, habilitada para cargas generales y peligrosas.
+      </p>
+
+      <div class="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
+        <a href={waPrincipal} target="_blank" rel="noopener noreferrer" class="btn-wa">
+          <IconoRed nombre="WhatsApp" class="h-5 w-5" />
+          Reservá tu camión
+        </a>
+        <a href="#servicios" class="btn-linea">
+          Ver servicios
+          <Icono nombre="flecha" class="h-5 w-5" />
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

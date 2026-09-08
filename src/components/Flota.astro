@@ -1,0 +1,135 @@
+---
+import { Image } from 'astro:assets';
+import { flota } from '../data/flota';
+import { tiposDeFlota } from '../data/servicios';
+import { linkWhatsApp } from '../data/site';
+import Icono from './Icono.astro';
+
+// Ícono que le corresponde a cada extra de la ficha.
+function iconoExtra(extra: string): string {
+  if (extra.startsWith('Pala')) return 'pala';
+  if (extra.startsWith('Zorra')) return 'zorra';
+  if (extra.startsWith('Refrigerado')) return 'frio';
+  if (extra.startsWith('Más altura') || extra.startsWith('Posibilidad')) return 'flecha';
+  return 'escudo';
+}
+---
+
+<section id="flota" class="bg-gris-50 py-20 sm:py-28">
+  <div class="contenedor">
+    <div class="reveal max-w-3xl">
+      <h2 class="titulo-seccion filete">Nuestra flota</h2>
+      <p class="mt-8 text-lg">
+        En Transporte Carchedi contamos con una amplia flota de camiones modernos. Estas son las
+        unidades con las que resolvemos cada tipo de carga, con sus medidas y capacidades.
+      </p>
+    </div>
+
+    <ul class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        flota.map((unidad) => (
+          <li class="reveal flex flex-col overflow-hidden rounded-sm bg-white ring-1 ring-gris-100">
+            <Image
+              src={unidad.foto}
+              alt={unidad.alt}
+              widths={[400, 800]}
+              sizes="(min-width: 1024px) 380px, (min-width: 640px) 45vw, 90vw"
+              class="aspect-[16/9] w-full object-cover"
+              loading="lazy"
+            />
+
+            <div class="flex flex-1 flex-col p-6">
+              <p class="font-cond text-sm uppercase tracking-widest text-gris-400">{unidad.marca}</p>
+              <h3 class="mt-1 text-2xl leading-tight">{unidad.nombre}</h3>
+              <p class="mt-1 font-cond text-lg uppercase tracking-wide text-rojo">
+                {unidad.variante}
+              </p>
+              <p class="mt-3 text-[15px] leading-relaxed">{unidad.descripcion}</p>
+
+              <dl class="mt-5 grid grid-cols-2 gap-px overflow-hidden rounded-sm bg-gris-200 text-center">
+                <div class="bg-white px-2 py-3">
+                  <dt class="font-cond text-xs uppercase tracking-widest text-gris-600">Pallets</dt>
+                  <dd class="font-cond text-2xl font-bold text-carbon">hasta {unidad.pallets}</dd>
+                </div>
+                <div class="bg-white px-2 py-3">
+                  <dt class="font-cond text-xs uppercase tracking-widest text-gris-600">
+                    Carga máxima
+                  </dt>
+                  <dd class="font-cond text-2xl font-bold text-carbon">{unidad.pesoMax}</dd>
+                </div>
+              </dl>
+
+              <dl class="mt-3 grid grid-cols-3 gap-px overflow-hidden rounded-sm bg-gris-200 text-center">
+                <div class="bg-white px-1 py-2.5">
+                  <dt class="font-cond text-xs uppercase tracking-widest text-gris-600">Largo</dt>
+                  <dd class="text-sm font-semibold text-carbon">{unidad.largo}</dd>
+                </div>
+                <div class="bg-white px-1 py-2.5">
+                  <dt class="font-cond text-xs uppercase tracking-widest text-gris-600">Ancho</dt>
+                  <dd class="text-sm font-semibold text-carbon">{unidad.ancho}</dd>
+                </div>
+                <div class="bg-white px-1 py-2.5">
+                  <dt class="font-cond text-xs uppercase tracking-widest text-gris-600">Alto</dt>
+                  <dd class="text-sm font-semibold text-carbon">{unidad.alto}</dd>
+                </div>
+              </dl>
+
+              <ul class="mt-5 flex flex-wrap gap-2">
+                {unidad.extras.map((extra) => (
+                  <li class="inline-flex items-center gap-1.5 rounded-sm bg-gris-100 px-2.5 py-1 text-xs font-medium text-gris-700">
+                    <Icono nombre={iconoExtra(extra)} class="h-3.5 w-3.5 text-rojo" />
+                    {extra}
+                  </li>
+                ))}
+              </ul>
+
+              <a
+                href={linkWhatsApp(
+                  `Hola, quería consultar por el ${unidad.nombre} ${unidad.variante} (${unidad.pallets} pallets).`,
+                )}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="mt-6 inline-flex items-center gap-1.5 self-start font-cond text-lg font-semibold uppercase tracking-wide text-rojo transition-colors hover:text-carbon"
+              >
+                Consultar esta unidad
+                <Icono nombre="flecha" class="h-4 w-4 -rotate-90" />
+              </a>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="reveal mt-14 grid gap-10 border-t border-gris-200 pt-12 lg:grid-cols-[1fr_1.3fr] lg:gap-16">
+      <div>
+        <h3 class="text-3xl">Tipos de vehículo</h3>
+        <ul class="mt-6 flex flex-wrap gap-2">
+          {
+            tiposDeFlota.map((tipo) => (
+              <li class="rounded-sm bg-white px-3 py-1.5 text-sm ring-1 ring-gris-200">{tipo}</li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div class="space-y-4 text-lg leading-relaxed">
+        <p>
+          Contamos con una excelente atención respaldada por nuestros clientes, junto a la
+          seguridad, la puntualidad y sobre todo la responsabilidad. Somos una empresa familiar que
+          se encarga de resolver cualquier tipo de cargas generales y cargas peligrosas, ya sea <strong
+            class="font-semibold text-carbon">almacenamiento, armado logístico y distribución</strong
+          >. Trabajamos para su movimiento dando consejos sobre qué vehículo se adecua mejor, y así
+          el precio más competitivo del mercado.
+        </p>
+        <p>
+          <strong class="font-semibold text-carbon"
+            >Toda nuestra flota está habilitada con todas las exigencias correspondientes: seguros,
+            seguros de ART para nuestros choferes y seguro de mercadería tanto en traslado como en
+            almacenaje.</strong
+          > Ofrecemos los datos de cada uno de nuestros empleados para que puedan estar comunicados en
+          todo momento.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

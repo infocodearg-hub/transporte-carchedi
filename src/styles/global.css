@@ -1,0 +1,131 @@
+@import 'tailwindcss';
+
+@import '@fontsource/barlow/400.css';
+@import '@fontsource/barlow/500.css';
+@import '@fontsource/barlow/600.css';
+@import '@fontsource/barlow-condensed/600.css';
+@import '@fontsource/barlow-condensed/700.css';
+
+@theme {
+  /* Rojo y negro tomados del PDF del logo, no estimados de capturas. */
+  --color-rojo: #d9232a;
+  --color-rojo-osc: #b21c22;
+  --color-carbon: #1a1919;
+  --color-carbon-2: #262525;
+  --color-verde-wa: #25d366;
+  --color-verde-wa-osc: #1da851;
+
+  --color-gris-50: #f7f7f8;
+  --color-gris-100: #eeeef0;
+  --color-gris-200: #dededf;
+  --color-gris-400: #9b9b9e;
+  --color-gris-600: #5c5c60;
+  --color-gris-700: #3f3f42;
+
+  --font-sans: 'Barlow', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-cond: 'Barlow Condensed', 'Barlow', ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  :root {
+    /* Necesario para que el acordeón pueda animar de 0 a la altura real del contenido. */
+    interpolate-size: allow-keywords;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* El header fijo no tiene que tapar el título de la sección al saltar por ancla. */
+    scroll-padding-top: 6.5rem;
+  }
+
+  body {
+    @apply bg-white font-sans text-[15px] leading-relaxed text-gris-700 antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-cond font-bold uppercase tracking-tight text-carbon;
+    text-wrap: balance;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-rojo;
+  }
+
+  ::selection {
+    @apply bg-rojo text-white;
+  }
+}
+
+@layer components {
+  .contenedor {
+    @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
+  }
+
+  .titulo-seccion {
+    @apply text-4xl sm:text-5xl;
+  }
+
+  /* Filete rojo bajo los títulos, tomado del catálogo de la empresa. */
+  .filete::after {
+    content: '';
+    @apply mt-4 block h-1 w-16 bg-rojo;
+  }
+
+  /* La base va agrupada: en Tailwind v4 una clase de componente no puede aplicar a otra. */
+  .btn,
+  .btn-rojo,
+  .btn-wa,
+  .btn-linea {
+    @apply inline-flex items-center justify-center gap-2 rounded-sm px-6 py-3 font-cond text-lg font-semibold uppercase tracking-wide transition-colors duration-200;
+  }
+
+  .btn-rojo {
+    @apply bg-rojo text-white hover:bg-rojo-osc;
+  }
+
+  .btn-wa {
+    @apply bg-verde-wa text-white hover:bg-verde-wa-osc;
+  }
+
+  .btn-linea {
+    @apply border border-white/70 text-white hover:bg-white hover:text-carbon;
+  }
+}
+
+/* Aparición al scroll. Sin rebote: opacidad y un desplazamiento corto. */
+@layer utilities {
+  .reveal {
+    opacity: 0;
+    transform: translateY(12px);
+    transition:
+      opacity 0.5s ease-out,
+      transform 0.5s ease-out;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

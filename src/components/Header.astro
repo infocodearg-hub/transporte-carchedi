@@ -1,0 +1,177 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/logo-tc.png';
+import { empresa, contacto, redes, navegacion, waPrincipal } from '../data/site';
+import Icono from './Icono.astro';
+import IconoRed from './IconoRed.astro';
+---
+
+<header id="header" class="fixed inset-x-0 top-0 z-50">
+  <!-- Barra superior: se esconde al scrollear para que la nav gane altura útil en pantalla. -->
+  <div id="barra-superior" class="hidden bg-carbon text-[13px] text-gris-200 lg:block">
+    <div class="contenedor flex h-9 items-center justify-between gap-6">
+      <div class="flex items-center gap-5">
+        <a href={`tel:${contacto.oficinaTel}`} class="flex items-center gap-1.5 hover:text-white">
+          <Icono nombre="telefono" class="h-4 w-4 text-rojo" />
+          {contacto.oficina}
+        </a>
+        <a href={`mailto:${contacto.email}`} class="flex items-center gap-1.5 hover:text-white">
+          <Icono nombre="mail" class="h-4 w-4 text-rojo" />
+          {contacto.email}
+        </a>
+        <span class="flex items-center gap-1.5">
+          <Icono nombre="reloj" class="h-4 w-4 text-rojo" />
+          {/* El sitio viejo dice "Lun a Sab" y está mal: atienden de lunes a viernes. */}
+          {contacto.horarioCorto}
+        </span>
+      </div>
+
+      <div class="flex items-center gap-5">
+        <span class="font-cond text-sm uppercase tracking-widest text-gris-400">
+          {empresa.desde}
+        </span>
+        <ul class="flex items-center gap-3">
+          {
+            redes.map((red) => (
+              <li>
+                <a
+                  href={red.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="block text-gris-400 transition-colors hover:text-white"
+                >
+                  <IconoRed nombre={red.nombre} class="h-4 w-4" />
+                  <span class="sr-only">{red.nombre}</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div id="barra-nav" class="bg-white shadow-sm transition-shadow duration-300">
+    <div class="contenedor flex items-center justify-between gap-4">
+      <a href="#inicio" class="flex shrink-0 items-center gap-3 py-3" aria-label={`${empresa.nombre} — Inicio`}>
+        <Image
+          src={logo}
+          alt=""
+          widths={[64, 128]}
+          sizes="52px"
+          class="h-11 w-auto transition-all duration-300 lg:h-14"
+          id="logo-header"
+          loading="eager"
+        />
+        <span class="font-cond text-xl font-bold uppercase leading-none tracking-tight text-carbon sm:text-2xl">
+          Transporte<br /><span class="text-rojo">Carchedi</span>
+        </span>
+      </a>
+
+      <nav aria-label="Navegación principal" class="hidden xl:block">
+        <ul class="flex items-center gap-6">
+          {
+            navegacion.map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  class="font-cond text-lg font-semibold uppercase tracking-wide text-carbon transition-colors hover:text-rojo"
+                >
+                  {item.texto}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <div class="flex items-center gap-2">
+        <a
+          href={waPrincipal}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn-wa hidden px-4 py-2.5 text-base sm:inline-flex"
+        >
+          <IconoRed nombre="WhatsApp" class="h-5 w-5" />
+          WhatsApp
+        </a>
+
+        <button
+          type="button"
+          id="btn-menu"
+          class="-mr-2 p-2 text-carbon xl:hidden"
+          aria-expanded="false"
+          aria-controls="menu-movil"
+        >
+          <Icono nombre="menu" class="h-7 w-7" />
+          <span class="sr-only">Abrir menú</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Menú móvil -->
+    <nav
+      id="menu-movil"
+      aria-label="Navegación principal"
+      class="hidden border-t border-gris-100 bg-white xl:hidden"
+    >
+      <ul class="contenedor flex flex-col py-2">
+        {
+          navegacion.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                class="block border-b border-gris-100 py-3 font-cond text-lg font-semibold uppercase tracking-wide text-carbon last:border-0"
+              >
+                {item.texto}
+              </a>
+            </li>
+          ))
+        }
+        <li class="pt-3 sm:hidden">
+          <a href={waPrincipal} target="_blank" rel="noopener noreferrer" class="btn-wa w-full">
+            <IconoRed nombre="WhatsApp" class="h-5 w-5" />
+            Escribinos por WhatsApp
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const btn = document.getElementById('btn-menu')!;
+  const menu = document.getElementById('menu-movil')!;
+  const barraSuperior = document.getElementById('barra-superior');
+  const barraNav = document.getElementById('barra-nav')!;
+  const logo = document.getElementById('logo-header');
+
+  btn.addEventListener('click', () => {
+    const abierto = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', String(!abierto));
+    menu.classList.toggle('hidden', abierto);
+    btn.querySelector('.sr-only')!.textContent = abierto ? 'Abrir menú' : 'Cerrar menú';
+  });
+
+  // Al elegir una sección el menú se cierra solo.
+  menu.querySelectorAll('a').forEach((a) =>
+    a.addEventListener('click', () => {
+      menu.classList.add('hidden');
+      btn.setAttribute('aria-expanded', 'false');
+    }),
+  );
+
+  // Al scrollear el header se compacta: la barra superior se pliega y el logo baja de altura.
+  let compacto = false;
+  const alScrollear = () => {
+    const debeCompactar = window.scrollY > 40;
+    if (debeCompactar === compacto) return;
+    compacto = debeCompactar;
+    barraSuperior?.classList.toggle('lg:hidden', compacto);
+    barraNav.classList.toggle('shadow-md', compacto);
+    logo?.classList.toggle('lg:h-11', compacto);
+    logo?.classList.toggle('lg:h-14', !compacto);
+  };
+  alScrollear();
+  window.addEventListener('scroll', alScrollear, { passive: true });
+</script>

@@ -1,0 +1,124 @@
+---
+import '../styles/global.css';
+import { empresa, contacto, redes } from '../data/site';
+
+// Las tres variantes que se usan arriba de todo. Sin precargarlas el navegador las descubre
+// recién al parsear el CSS y el texto del hero salta al cambiar de tipografía.
+import barlow400 from '@fontsource/barlow/files/barlow-latin-400-normal.woff2?url';
+import cond600 from '@fontsource/barlow-condensed/files/barlow-condensed-latin-600-normal.woff2?url';
+import cond700 from '@fontsource/barlow-condensed/files/barlow-condensed-latin-700-normal.woff2?url';
+
+interface Props {
+  titulo: string;
+  descripcion: string;
+}
+
+const { titulo, descripcion } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImagen = new URL('/og.jpg', Astro.site);
+
+// Datos estructurados: la dirección y el teléfono son la clave del posicionamiento local en
+// Tapiales y La Matanza.
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'MovingCompany',
+  name: empresa.nombre,
+  legalName: empresa.razonSocial,
+  description: empresa.descripcion,
+  url: canonical.href,
+  image: ogImagen.href,
+  telephone: contacto.oficinaTel,
+  email: contacto.email,
+  foundingDate: '2015',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: contacto.calle,
+    addressLocality: contacto.localidad,
+    addressRegion: contacto.provincia,
+    postalCode: contacto.cp,
+    addressCountry: contacto.pais,
+  },
+  openingHoursSpecification: {
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+    opens: '08:00',
+    closes: '18:00',
+  },
+  areaServed: [
+    { '@type': 'City', name: 'Ciudad Autónoma de Buenos Aires' },
+    { '@type': 'AdministrativeArea', name: 'Gran Buenos Aires' },
+  ],
+  sameAs: redes.map((r) => r.url),
+};
+---
+
+<!doctype html>
+<html lang="es-AR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="canonical" href={canonical.href} />
+
+    {
+      [cond700, cond600, barlow400].map((fuente) => (
+        <link rel="preload" href={fuente} as="font" type="font/woff2" crossorigin />
+      ))
+    }
+    <link rel="icon" href="/favicon.png" type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{titulo}</title>
+    <meta name="description" content={descripcion} />
+    <meta name="theme-color" content="#1a1919" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_AR" />
+    <meta property="og:site_name" content={empresa.nombre} />
+    <meta property="og:title" content={titulo} />
+    <meta property="og:description" content={descripcion} />
+    <meta property="og:url" content={canonical.href} />
+    <meta property="og:image" content={ogImagen.href} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Camión con semirremolque de Transporte Carchedi" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </head>
+
+  <body>
+    <a
+      href="#contenido"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-sm focus:bg-rojo focus:px-4 focus:py-2 focus:text-white"
+    >
+      Saltar al contenido
+    </a>
+
+    <slot />
+
+    <script>
+      // Aparición progresiva al scrollear. Si el sistema pide menos movimiento, se muestra todo
+      // de entrada y no se observa nada.
+      const menosMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const elementos = document.querySelectorAll<HTMLElement>('.reveal');
+
+      if (menosMovimiento || !('IntersectionObserver' in window)) {
+        elementos.forEach((el) => el.classList.add('visible'));
+      } else {
+        const observador = new IntersectionObserver(
+          (entradas) => {
+            for (const entrada of entradas) {
+              if (entrada.isIntersecting) {
+                entrada.target.classList.add('visible');
+                observador.unobserve(entrada.target);
+              }
+            }
+          },
+          { rootMargin: '0px 0px -10% 0px', threshold: 0.05 },
+        );
+        elementos.forEach((el) => observador.observe(el));
+      }
+    </script>
+  </body>
+</html>

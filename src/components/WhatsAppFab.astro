@@ -1,0 +1,27 @@
+---
+import { waPrincipal } from '../data/site';
+import IconoRed from './IconoRed.astro';
+---
+
+<a
+  href={waPrincipal}
+  target="_blank"
+  rel="noopener noreferrer"
+  id="wa-fab"
+  class="fixed bottom-5 right-5 z-40 inline-flex h-14 w-14 translate-y-3 items-center justify-center rounded-full bg-verde-wa text-white opacity-0 shadow-lg transition-all duration-300 hover:bg-verde-wa-osc sm:h-16 sm:w-16"
+  aria-label="Escribinos por WhatsApp"
+>
+  <IconoRed nombre="WhatsApp" class="h-7 w-7 sm:h-8 sm:w-8" />
+</a>
+
+<script>
+  // Aparición breve al cargar, no antes: en el hero ya hay un botón de WhatsApp bien visible.
+  const fab = document.getElementById('wa-fab');
+  const mostrar = () => fab?.classList.remove('translate-y-3', 'opacity-0');
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    mostrar();
+  } else {
+    window.setTimeout(mostrar, 900);
+  }
+</script>

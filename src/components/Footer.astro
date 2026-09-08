@@ -1,0 +1,102 @@
+---
+import { Image } from 'astro:assets';
+import logoClaro from '../assets/logo-tc-claro.png';
+import { empresa, contacto, redes, navegacion } from '../data/site';
+import Icono from './Icono.astro';
+import IconoRed from './IconoRed.astro';
+
+const anio = new Date().getFullYear();
+---
+
+<!-- El padding inferior extra deja lugar al botón flotante de WhatsApp en móvil. -->
+<footer class="bg-carbon pb-28 pt-16 text-gris-200 sm:pb-16">
+  <div class="contenedor">
+    <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+      <div class="lg:col-span-2">
+        <div class="flex items-center gap-3">
+          <Image src={logoClaro} alt="" widths={[56, 112]} sizes="48px" class="h-12 w-auto" loading="lazy" />
+          <span class="font-cond text-2xl font-bold uppercase leading-none tracking-tight text-white">
+            Transporte<br /><span class="text-rojo">Carchedi</span>
+          </span>
+        </div>
+        <p class="mt-5 max-w-md leading-relaxed">
+          Empresa familiar de transporte de cargas generales y peligrosas. {empresa.desde}.
+        </p>
+        <ul class="mt-6 flex gap-3">
+          {
+            redes.map((red) => (
+              <li>
+                <a
+                  href={red.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex h-11 w-11 items-center justify-center rounded-sm bg-carbon-2 text-white transition-colors hover:bg-rojo"
+                >
+                  <IconoRed nombre={red.nombre} class="h-5 w-5" />
+                  <span class="sr-only">{red.nombre}</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="text-xl text-white">Contacto</h2>
+        <ul class="mt-5 space-y-3 text-[15px]">
+          <li class="flex gap-2.5">
+            <Icono nombre="pin" class="mt-0.5 h-4 w-4 shrink-0 text-rojo" />
+            <a href={contacto.mapa} target="_blank" rel="noopener noreferrer" class="hover:text-white">
+              {contacto.direccion}
+            </a>
+          </li>
+          <li class="flex gap-2.5">
+            <Icono nombre="telefono" class="mt-0.5 h-4 w-4 shrink-0 text-rojo" />
+            <span>
+              <a href={`tel:${contacto.oficinaTel}`} class="hover:text-white">{contacto.oficina}</a>
+              <span class="text-gris-600"> · </span>
+              <a href={`tel:${contacto.celularTel}`} class="hover:text-white">{contacto.celular}</a>
+            </span>
+          </li>
+          <li class="flex gap-2.5">
+            <Icono nombre="mail" class="mt-0.5 h-4 w-4 shrink-0 text-rojo" />
+            <a href={`mailto:${contacto.email}`} class="hover:text-white">{contacto.email}</a>
+          </li>
+          <li class="flex gap-2.5">
+            <Icono nombre="reloj" class="mt-0.5 h-4 w-4 shrink-0 text-rojo" />
+            <span>{contacto.horario}<br /><span class="text-gris-400">{contacto.horarioNota}</span></span>
+          </li>
+        </ul>
+      </div>
+
+      <nav aria-label="Navegación del pie">
+        <h2 class="text-xl text-white">Secciones</h2>
+        <ul class="mt-5 space-y-2.5 text-[15px]">
+          {
+            navegacion.map((item) => (
+              <li>
+                <a href={item.href} class="hover:text-white">
+                  {item.texto}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </div>
+
+    <div
+      class="mt-12 flex flex-col gap-2 border-t border-carbon-2 pt-6 text-sm text-gris-400 sm:flex-row sm:items-center sm:justify-between"
+    >
+      <p>© {anio} {empresa.razonSocial}. Todos los derechos reservados.</p>
+      <p>
+        Desarrollado por <a
+          href="https://www.instagram.com/codearg"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-gris-200 underline underline-offset-2 hover:text-white">CodeArg</a
+        >
+      </p>
+    </div>
+  </div>
+</footer>

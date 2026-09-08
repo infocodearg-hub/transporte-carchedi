@@ -1,0 +1,64 @@
+---
+import { faq } from '../data/faq';
+import Icono from './Icono.astro';
+---
+
+<section id="faq" class="py-20 sm:py-28">
+  <div class="contenedor">
+    <div class="reveal max-w-3xl">
+      <h2 class="titulo-seccion filete">Preguntas frecuentes</h2>
+    </div>
+
+    <div class="mt-12 max-w-4xl">
+      {
+        faq.map((item) => (
+          <details class="acordeon group border-b border-gris-200 first:border-t">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-4 py-5 font-cond text-xl font-semibold uppercase tracking-wide text-carbon transition-colors hover:text-rojo sm:text-2xl">
+              {item.pregunta}
+              <Icono
+                nombre="flecha"
+                class="h-5 w-5 shrink-0 text-rojo transition-transform duration-300 group-open:rotate-180"
+              />
+            </summary>
+            <p class="pb-6 pr-8 leading-relaxed">{item.respuesta}</p>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Safari dibuja el triángulo por defecto pese a list-none. */
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  /*
+    Apertura animada. `::details-content` es lo único que permite animar un <details> nativo sin
+    JavaScript; donde no está soportado el acordeón sigue abriendo y cerrando, solo que sin
+    transición. Nada de esto rompe la navegación por teclado, que es nativa.
+  */
+  @supports selector(::details-content) {
+    .acordeon::details-content {
+      block-size: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition:
+        block-size 0.3s ease-out,
+        content-visibility 0.3s allow-discrete,
+        opacity 0.25s ease-out;
+    }
+
+    .acordeon[open]::details-content {
+      block-size: auto;
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .acordeon::details-content {
+      transition: none;
+    }
+  }
+</style>

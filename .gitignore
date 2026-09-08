@@ -1,0 +1,17 @@
+# dependencias
+node_modules/
+
+# salida del build
+dist/
+.astro/
+
+# entorno
+.env
+.env.production
+
+# macOS
+.DS_Store
+
+# logs
+*.log
+npm-debug.log*

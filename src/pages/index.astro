@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import Nosotros from '../components/Nosotros.astro';
+import Servicios from '../components/Servicios.astro';
+import Flota from '../components/Flota.astro';
+import Habilitaciones from '../components/Habilitaciones.astro';
+import CtaBanner from '../components/CtaBanner.astro';
+import Faq from '../components/Faq.astro';
+import Contacto from '../components/Contacto.astro';
+import Footer from '../components/Footer.astro';
+import WhatsAppFab from '../components/WhatsAppFab.astro';
+import { empresa } from '../data/site';
+---
+
+<Base
+  titulo={`${empresa.nombre} — Transporte de cargas en Capital Federal y GBA`}
+  descripcion={empresa.descripcion}
+>
+  <Header />
+
+  <main id="contenido">
+    <Hero />
+    <Nosotros />
+    <Servicios />
+    <Flota />
+    <Habilitaciones />
+    <CtaBanner />
+    <Faq />
+    <Contacto />
+  </main>
+
+  <Footer />
+  <WhatsAppFab />
+</Base>
